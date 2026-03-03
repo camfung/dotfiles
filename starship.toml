@@ -1,0 +1,40 @@
+# Starship prompt configuration
+# Converted from Spaceship config
+
+format = """
+$directory
+$time$git_branch$git_status$python$cmd_duration$character"""
+
+# Don't add blank line between prompts
+add_newline = false
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+format = "[$path]($style)"
+
+[time]
+disabled = false
+format = "[$time]($style) "
+time_format = "%H:%M:%S"
+
+[git_branch]
+format = "[$branch]($style) "
+
+[git_status]
+format = "[$all_status$ahead_behind]($style) "
+
+[python]
+format = "[${virtualenv}]($style) "
+detect_extensions = []
+detect_files = []
+detect_folders = []
+
+[cmd_duration]
+min_time = 0
+show_milliseconds = true
+format = "[$duration]($style) "
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
