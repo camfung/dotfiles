@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+: "${RS_PROJECT_DIR:?RS_PROJECT_DIR not set — add it to ~/.env.local}"
+cd "$RS_PROJECT_DIR" && exec "$RS_PROJECT_DIR/.venv/bin/python" -m src.presentation.oracle_cli "$@"

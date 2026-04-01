@@ -1,0 +1,3 @@
+# Machine-specific aliases and config
+# Copy to ~/.machine-local.zsh and customize
+# alias purpleline="adb connect 10.0.2.151"
