@@ -1,12 +1,15 @@
 # Starship prompt configuration
 # Converted from Spaceship config
 
-format = """
-$directory
+format = """$hostname$directory
 $time$git_branch$git_status$python$cmd_duration$character"""
 
 # Don't add blank line between prompts
 add_newline = false
+
+[hostname]
+ssh_only = true
+format = "[$hostname]($style) "
 
 [directory]
 truncation_length = 0
