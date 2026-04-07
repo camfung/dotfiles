@@ -15,6 +15,14 @@ fi
 
 set -o vi
 
+function zle-clipboard-yank {
+  zle vi-yank
+  printf '%s' "$CUTBUFFER" | xclip -selection clipboard
+}
+zle -N zle-clipboard-yank
+bindkey -M vicmd 'Y' zle-clipboard-yank
+bindkey -M visual 'Y' zle-clipboard-yank
+
 # Load dotfiles modules
 source ~/dotfiles/env.zsh
 source ~/dotfiles/aliases.zsh
@@ -77,3 +85,5 @@ command -v oracle-cli &>/dev/null && alias ora='oracle-cli'
 
 # Machine-specific config (not tracked)
 [[ -f ~/.machine-local.zsh ]] && source ~/.machine-local.zsh
+export ANDROID_HOME=~/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
