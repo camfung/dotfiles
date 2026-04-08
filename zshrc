@@ -53,6 +53,9 @@ fi
 # fdfind
 if command -v fdfind &>/dev/null; then
   alias fd="fdfind"
+  export FD_OPTIONS="--unrestricted --full-path"
+elif command -v fd &>/dev/null; then
+  export FD_OPTIONS="--unrestricted --full-path"
 fi
 
 # nvm

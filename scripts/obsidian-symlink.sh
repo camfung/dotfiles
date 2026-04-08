@@ -15,7 +15,7 @@ Obsidian daily note folder and logs the action per-project.
   - Derives project name from cwd (first child of $PROJECTS_ROOT/)
   - Creates a symlink in:  Daily notes/week {W}/{DATE}/claude/{project}/
   - Appends an entry to:   Daily notes/week {W}/{DATE}/claude-log_{project}_{DATE}.md
-  - Falls back to "misc" for work outside the Projects directory
+  - Falls back to the file's parent directory name for work outside Projects
 
 Skipped paths: obsidian-vault/*, node_modules/*, .git/*, __pycache__/*
 
@@ -39,7 +39,7 @@ cwd=$(echo "$input" | jq -r '.cwd // empty')
 
 [ ! -f "$file_path" ] && exit 0
 
-project="misc"
+project=""
 for path in "$cwd" "$file_path"; do
   if [[ "$path" == "$PROJECTS_ROOT/"* ]]; then
     relative="${path#$PROJECTS_ROOT/}"
@@ -47,6 +47,7 @@ for path in "$cwd" "$file_path"; do
     break
   fi
 done
+[ -z "$project" ] && project=$(basename "$(dirname "$file_path")")
 
 week=$(cat "${VAULT}/current-week.txt" 2>/dev/null | tr -d '[:space:]')
 today=$(date +%Y-%m-%d)
@@ -63,17 +64,4 @@ basename=$(basename "$file_path")
 
 ln -s "$file_path" "$target_dir/$basename"
 
-log_file="${VAULT}/Daily notes/week ${week}/${today}/claude-log_${project}_${today}.md"
 
-if [ ! -f "$log_file" ]; then
-  cat > "$log_file" <<FRONTMATTER
----
-tags:
-  - "#${project}"
-daily-note: "[[${today}]]"
----
-
-FRONTMATTER
-fi
-
-echo "- ${now} | Created [[claude/${project}/${basename}]] (from ${file_path})" >> "$log_file"

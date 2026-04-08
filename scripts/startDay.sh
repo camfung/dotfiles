@@ -32,7 +32,6 @@ yesterday: $prevdatestr
 tags:
   - \""#Week$1"\"
 coffees drank:
-claude-log: \"[[Daily notes/week $1/$date/claude-log_$date|claude-log]]\"
 ---" > "$date/$date.md"
 
 echo $(( $currentDay + 1)) > "${OBSIDIAN_VAULT}/current-day.txt"
