@@ -13,7 +13,8 @@ Obsidian daily note folder and logs the action per-project.
 
   - Reads the current week from $OBSIDIAN_VAULT/current-week.txt
   - Derives project name from cwd (first child of $PROJECTS_ROOT/)
-  - Creates a symlink in:  Daily notes/week {W}/{DATE}/claude/{project}/
+  - Creates a symlink in:  Daily notes/week {W}/{DATE}/claude/{project}/{module}/
+    where {module} is the first meaningful subdir (skipping src/lib/main/etc)
   - Appends an entry to:   Daily notes/week {W}/{DATE}/claude-log_{project}_{DATE}.md
   - Falls back to the file's parent directory name for work outside Projects
 
@@ -55,7 +56,31 @@ now=$(date +%H:%M)
 
 [ -z "$week" ] && exit 0
 
-target_dir="${VAULT}/Daily notes/week ${week}/${today}/claude/${project}"
+# Two-tier: project + first meaningful subdir (skip noise dirs)
+NOISE_DIRS="src|lib|main|java|com|org|kotlin|scala|resources|app|pkg|internal|cmd"
+
+sub_path=""
+if [[ -n "$project" && "$file_path" == "$PROJECTS_ROOT/$project/"* ]]; then
+  relative="${file_path#$PROJECTS_ROOT/$project/}"
+else
+  relative=$(basename "$file_path")
+fi
+
+# Walk path components, grab first non-noise dir as module
+module=""
+IFS='/' read -ra parts <<< "$(dirname "$relative")"
+for part in "${parts[@]}"; do
+  if [[ -n "$part" && ! "$part" =~ ^($NOISE_DIRS)$ ]]; then
+    module="$part"
+    break
+  fi
+done
+
+if [[ -n "$module" ]]; then
+  target_dir="${VAULT}/Daily notes/week ${week}/${today}/claude/${project}/${module}"
+else
+  target_dir="${VAULT}/Daily notes/week ${week}/${today}/claude/${project}"
+fi
 mkdir -p "$target_dir"
 
 basename=$(basename "$file_path")

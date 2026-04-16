@@ -35,8 +35,8 @@ for f in ~/dotfiles/functions/*.zsh; do source "$f"; done
 
 # eza
 if command -v eza &>/dev/null; then
-  alias ls='eza --icons'
-  alias ll='eza -lah --icons'
+  alias ls='eza --icons=auto'
+  alias ll='eza -lah --icons=auto'
 fi
 
 # starship
