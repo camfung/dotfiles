@@ -58,10 +58,14 @@ The installer (`install.sh`) is idempotent — re-running it on a fresh machine 
 Three related blocks in `~/dotfiles/zshrc`:
 
 1. **Plugin list** — `plugins=(z zsh-vi-mode)`. Order matters only when plugins bind overlapping keys; here it does not.
-2. **Editor block** — `EDITOR` is set to `nvim` when available, falling back to `vim`. `VISUAL=$EDITOR` so `v` in vicmd (the plugin's "edit current command in editor" binding) opens nvim.
+2. **Editor block** — `EDITOR` is set to `nvim` when available, falling back to `vim`. `VISUAL=$EDITOR` and `ZVM_VI_EDITOR=$EDITOR` so `vv` (vicmd → visual → edit) and `v` in visual mode open nvim. **This block must come AFTER `source ~/dotfiles/env.zsh`**, because nvim lives at `/opt/nvim-linux-x86_64/bin/nvim` and that path is added to `PATH` inside `env.zsh`. Running the guard earlier makes `command -v nvim` return false and silently falls back to vim. `ZVM_VI_EDITOR` is set explicitly so it overrides anything the plugin cached at lazy init.
 3. **Y binding hook** — the `zle-clipboard-yank` widget is defined at top level, but its `bindkey` calls live inside `zvm_after_lazy_keybindings()`. This is required because zsh-vi-mode rebuilds the `vicmd` and `visual` keymaps during lazy init, which would otherwise clobber any bindings set earlier in `zshrc`.
 
 `set -o vi` was removed — the plugin runs `bindkey -v` itself.
+
+### `vv` keystroke
+
+In vicmd mode, press `v` to enter visual mode, then `v` again to open the current command line in `$ZVM_VI_EDITOR`. The edit-command-line binding lives in the **visual** keymap, not vicmd. Verify with `bindkey -M visual | grep -E "^\"v"` — expect `"v" zvm_vi_edit_command_line`.
 
 ## Customizing further
 

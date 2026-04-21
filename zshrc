@@ -6,14 +6,6 @@ ZSH_THEME=""
 plugins=(z zsh-vi-mode)
 source $ZSH/oh-my-zsh.sh
 
-# Editor
-if command -v nvim &>/dev/null; then
-  export EDITOR='nvim'
-else
-  export EDITOR='vim'
-fi
-export VISUAL=$EDITOR
-
 function zle-clipboard-yank {
   zle vi-yank
   printf '%s' "$CUTBUFFER" | xclip -selection clipboard
@@ -25,13 +17,22 @@ function zvm_after_lazy_keybindings() {
   bindkey -M visual 'Y' zle-clipboard-yank
 }
 
-# Load dotfiles modules
+# Load dotfiles modules (env.zsh extends PATH — must come before editor guard)
 source ~/dotfiles/env.zsh
 source ~/dotfiles/aliases.zsh
 for f in ~/dotfiles/functions/*.zsh; do source "$f"; done
 
 # Load env.local for script config (paths, etc.)
 [[ -f ~/.env.local ]] && source ~/.env.local
+
+# Editor — runs after env.zsh so /opt/nvim-linux-x86_64/bin is on PATH
+if command -v nvim &>/dev/null; then
+  export EDITOR='nvim'
+else
+  export EDITOR='vim'
+fi
+export VISUAL=$EDITOR
+export ZVM_VI_EDITOR=$EDITOR
 
 # --- Conditional tool loading ---
 
