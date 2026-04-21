@@ -3,25 +3,27 @@ export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 # Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
-plugins=(z)
+plugins=(z zsh-vi-mode)
 source $ZSH/oh-my-zsh.sh
 
 # Editor
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
+if command -v nvim &>/dev/null; then
   export EDITOR='nvim'
+else
+  export EDITOR='vim'
 fi
-
-set -o vi
+export VISUAL=$EDITOR
 
 function zle-clipboard-yank {
   zle vi-yank
   printf '%s' "$CUTBUFFER" | xclip -selection clipboard
 }
 zle -N zle-clipboard-yank
-bindkey -M vicmd 'Y' zle-clipboard-yank
-bindkey -M visual 'Y' zle-clipboard-yank
+
+function zvm_after_lazy_keybindings() {
+  bindkey -M vicmd 'Y' zle-clipboard-yank
+  bindkey -M visual 'Y' zle-clipboard-yank
+}
 
 # Load dotfiles modules
 source ~/dotfiles/env.zsh

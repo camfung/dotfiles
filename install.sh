@@ -32,6 +32,16 @@ echo "Linked rs-cli -> ~/.local/bin/"
 ln -sf "$DOTFILES_DIR/scripts/oracle-cli" ~/.local/bin/oracle-cli
 echo "Linked oracle-cli -> ~/.local/bin/"
 
+# Clone zsh-vi-mode OMZ custom plugin if not present
+ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+if [ ! -d "$ZSH_CUSTOM_DIR/plugins/zsh-vi-mode" ]; then
+  git clone https://github.com/jeffreytse/zsh-vi-mode \
+    "$ZSH_CUSTOM_DIR/plugins/zsh-vi-mode"
+  echo "Cloned zsh-vi-mode -> $ZSH_CUSTOM_DIR/plugins/"
+else
+  echo "zsh-vi-mode already cloned, skipping"
+fi
+
 # Copy env.local template if it doesn't exist
 if [ ! -f ~/.env.local ]; then
   cp "$DOTFILES_DIR/env.local.example" ~/.env.local
