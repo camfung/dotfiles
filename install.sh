@@ -32,6 +32,15 @@ echo "Linked rs-cli -> ~/.local/bin/"
 ln -sf "$DOTFILES_DIR/scripts/oracle-cli" ~/.local/bin/oracle-cli
 echo "Linked oracle-cli -> ~/.local/bin/"
 
+# Install kitty terminfo to ~/.terminfo so TERM=xterm-kitty resolves
+# (ncurses auto-discovers ~/.terminfo; no sudo needed)
+# Without this, Backspace and other keys can misbehave outside kitty's own session.
+KITTY_TERMINFO="$HOME/.local/kitty.app/lib/kitty/terminfo/kitty.terminfo"
+if command -v tic &>/dev/null && [ -f "$KITTY_TERMINFO" ] && [ ! -f "$HOME/.terminfo/x/xterm-kitty" ]; then
+  tic -x -o "$HOME/.terminfo" "$KITTY_TERMINFO"
+  echo "Installed xterm-kitty terminfo -> ~/.terminfo/"
+fi
+
 # Clone zsh-vi-mode OMZ custom plugin if not present
 ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 if [ ! -d "$ZSH_CUSTOM_DIR/plugins/zsh-vi-mode" ]; then
