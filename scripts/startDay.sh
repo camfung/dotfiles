@@ -28,6 +28,7 @@ echo "---
 day: \"${currentDay}\"
 week: \"$1\"
 start time:
+home time:
 yesterday: $prevdatestr
 tags:
   - \""#Week$1"\"

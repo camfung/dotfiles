@@ -1,3 +1,6 @@
+export DOT_FILES_HOME="$HOME/dotfiles"
+export RIPGREP_CONFIG_PATH="$DOT_FILES_HOME/config/.ripgreprc"
+
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 export PATH="$PATH:/opt/platform-tools"
