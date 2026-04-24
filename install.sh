@@ -19,12 +19,20 @@ echo "Linked ~/.zshrc -> $DOTFILES_DIR/zshrc"
 # Make scripts executable
 chmod +x "$DOTFILES_DIR/scripts/"*
 
+# Ensure dotfiles-owned target dirs exist (safe to create on any machine).
+mkdir -p ~/.claude/hooks ~/.local/bin
+
 # Symlink scripts back to their expected locations
 ln -sf "$DOTFILES_DIR/scripts/obsidian-symlink.sh" ~/.claude/hooks/obsidian-symlink.sh
 echo "Linked obsidian-symlink.sh -> ~/.claude/hooks/"
 
-ln -sf "$DOTFILES_DIR/scripts/startDay.sh" ~/Documents/obsidian-vault/startDay.sh
-echo "Linked startDay.sh -> ~/Documents/obsidian-vault/"
+# Obsidian vault is user data — only link if the vault is already present.
+if [ -d ~/Documents/obsidian-vault ]; then
+  ln -sf "$DOTFILES_DIR/scripts/startDay.sh" ~/Documents/obsidian-vault/startDay.sh
+  echo "Linked startDay.sh -> ~/Documents/obsidian-vault/"
+else
+  echo "Skipped startDay.sh link (no ~/Documents/obsidian-vault on this machine)"
+fi
 
 ln -sf "$DOTFILES_DIR/scripts/rs-cli" ~/.local/bin/rs-cli
 echo "Linked rs-cli -> ~/.local/bin/"
@@ -34,11 +42,23 @@ echo "Linked oracle-cli -> ~/.local/bin/"
 
 # Install kitty terminfo to ~/.terminfo so TERM=xterm-kitty resolves
 # (ncurses auto-discovers ~/.terminfo; no sudo needed)
-# Without this, Backspace and other keys can misbehave outside kitty's own session.
-KITTY_TERMINFO="$HOME/.local/kitty.app/lib/kitty/terminfo/kitty.terminfo"
-if command -v tic &>/dev/null && [ -f "$KITTY_TERMINFO" ] && [ ! -f "$HOME/.terminfo/x/xterm-kitty" ]; then
-  tic -x -o "$HOME/.terminfo" "$KITTY_TERMINFO"
-  echo "Installed xterm-kitty terminfo -> ~/.terminfo/"
+# Without this, Backspace and other keys can misbehave outside kitty's own session
+# (especially over SSH when the remote host has no xterm-kitty entry).
+KITTY_TERMINFO=""
+for candidate in \
+  "$HOME/.local/kitty.app/lib/kitty/terminfo/kitty.terminfo" \
+  "/Applications/kitty.app/Contents/Resources/kitty/terminfo/kitty.terminfo" \
+  "/usr/share/terminfo/kitty.terminfo"; do
+  if [ -f "$candidate" ]; then
+    KITTY_TERMINFO="$candidate"
+    break
+  fi
+done
+if command -v tic &>/dev/null && [ -n "$KITTY_TERMINFO" ] \
+   && [ ! -f "$HOME/.terminfo/78/xterm-kitty" ] \
+   && [ ! -f "$HOME/.terminfo/x/xterm-kitty" ]; then
+  tic -x -o "$HOME/.terminfo" "$KITTY_TERMINFO" 2>/dev/null
+  echo "Installed xterm-kitty terminfo -> ~/.terminfo/ (source: $KITTY_TERMINFO)"
 fi
 
 # Clone zsh-vi-mode OMZ custom plugin if not present
