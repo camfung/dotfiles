@@ -26,6 +26,10 @@ alias pyserve='python3 -m http.server'
 alias claude='claude --permission-mode auto'
 alias clauder='claude --resume'
 alias setup-claude="git clone https://github.com/coleam00/context-engineering-intro .claude && mv .claude/.claude/commands/ .claude/"
+if command -v claude &>/dev/null; then
+  alias cl='claude --effort low'
+  alias ch='claude --effort xhigh'
+fi
 
 # Misc
 alias q='echo "tsk tsk"'
