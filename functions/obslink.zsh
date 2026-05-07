@@ -7,8 +7,10 @@ obslink() {
   fi
 
   local source_path="$1"
-  local link_name="${2:-$(basename "$source_path")}"
-  local target_dir="$HOME/Documents/obsidian-vault"
+  local date=${(%):-%D{%Y-%m-%d}}
+  local current_week=$(<"${OBSIDIAN_VAULT}/current-week.txt")
+  local target_dir="${OBSIDIAN_VAULT}/Daily notes/week ${current_week}/${date}"
+  local link_name="${2:-${source_path:t}}"
 
   if [ ! -e "$source_path" ]; then
     echo "Error: File or directory '$source_path' does not exist"
