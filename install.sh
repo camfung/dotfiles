@@ -88,4 +88,8 @@ else
 fi
 
 echo ""
+echo "Installing core dependencies (fd, rg, claude)..."
+bash "$DOTFILES_DIR/dependencies/install-all.sh"
+
+echo ""
 echo "Done! Run 'source ~/.zshrc' to reload."
