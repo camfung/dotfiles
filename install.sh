@@ -40,6 +40,11 @@ echo "Linked rs-cli -> ~/.local/bin/"
 ln -sf "$DOTFILES_DIR/scripts/oracle-cli" ~/.local/bin/oracle-cli
 echo "Linked oracle-cli -> ~/.local/bin/"
 
+mkdir -p ~/.config/kitty
+ln -sf "$DOTFILES_DIR/config/kitty/kitty.conf" ~/.config/kitty/kitty.conf
+ln -sf "$DOTFILES_DIR/config/kitty/tab_bar.py" ~/.config/kitty/tab_bar.py
+echo "Linked kitty config -> ~/.config/kitty/"
+
 # Install kitty terminfo to ~/.terminfo so TERM=xterm-kitty resolves
 # (ncurses auto-discovers ~/.terminfo; no sudo needed)
 # Without this, Backspace and other keys can misbehave outside kitty's own session

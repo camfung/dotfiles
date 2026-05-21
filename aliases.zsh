@@ -23,7 +23,7 @@ alias src='. .venv/bin/activate'
 alias pyserve='python3 -m http.server'
 
 # Claude
-alias claude='claude --permission-mode auto'
+alias c='claude --permission-mode auto'
 alias clauder='claude --resume'
 alias setup-claude="git clone https://github.com/coleam00/context-engineering-intro .claude && mv .claude/.claude/commands/ .claude/"
 if command -v claude &>/dev/null; then
@@ -39,3 +39,4 @@ alias startday="/home/camer/dotfiles/scripts/startDay.sh"
 alias chats="/home/camer/dotfiles/scripts/chatsearch.py"
 alias syncandroid="rsync -av --delete ~/Documents/obsidian-vault/ /media/camer/CAMFLASHER/CaracalObsVault"
 alias cm='/home/camer/Documents/Projects/tvmtestsmetra/.venv/bin/claude-monitor'
+alias mget='m3get'
