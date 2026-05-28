@@ -92,6 +92,18 @@ else
   echo "~/.machine-local.zsh already exists, skipping"
 fi
 
+# Load GNOME Vitals extension config (CPU usage/temp + memory in top bar).
+# Only on GNOME with dconf available; harmless to skip elsewhere.
+if command -v dconf &>/dev/null && [ -f "$DOTFILES_DIR/config/gnome/vitals.dconf" ]; then
+  dconf load /org/gnome/shell/extensions/vitals/ < "$DOTFILES_DIR/config/gnome/vitals.dconf"
+  echo "Loaded GNOME Vitals config -> dconf"
+  if command -v gnome-extensions &>/dev/null; then
+    gnome-extensions enable Vitals@CoreCoding.com 2>/dev/null \
+      && echo "Enabled Vitals extension" \
+      || echo "Vitals extension not installed — get it from extensions.gnome.org"
+  fi
+fi
+
 echo ""
 echo "Installing core dependencies (fd, rg, claude)..."
 bash "$DOTFILES_DIR/dependencies/install-all.sh"

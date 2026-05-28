@@ -1,0 +1,5 @@
+[/]
+hot-sensors=['_memory_usage_', '_processor_usage_', '__temperature_avg__']
+show-memory=true
+show-processor=true
+show-temperature=true
