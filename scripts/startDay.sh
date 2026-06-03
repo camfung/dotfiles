@@ -20,11 +20,6 @@ else
 fi
 
 
-target_dir="${OBSIDIAN_VAULT}/Daily notes/week ${week}"
-
-if [ ! -d "$target_dir" ]; then
-    mkdir -p "$target_dir"
-fi
 
 touch "$date/$date.md"
 
@@ -48,4 +43,14 @@ coffees drank:
 
 echo $(( $currentDay + 1)) > "${OBSIDIAN_VAULT}/current-day.txt"
 
-mv "$date" "$target_dir"
+target_dir="${OBSIDIAN_VAULT}/Daily notes/week ${week}"
+
+if [ ! -d "$target_dir" ]; then
+    mkdir -p "$target_dir"
+fi
+
+if [ ! -d "$target_dir/$date" ]; then
+    mv "$date" "$target_dir"
+else 
+    mv "$date/$date.md" "$target_dir/$date"
+fi
