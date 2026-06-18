@@ -1,0 +1,4 @@
+#compdef utc
+# Converts a UTC time string to America/Los_Angeles. No candidates to offer —
+# just label the expected argument.
+_arguments '1:UTC time (e.g. "2026-06-11 14:30" or "14:30"):'

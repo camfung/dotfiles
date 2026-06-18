@@ -37,7 +37,7 @@ def draw_tab(
     wd = ''
     tab_obj = get_boss().tab_for_id(tab.tab_id)
     if tab_obj is not None and tab_obj.active_window is not None:
-        wd = (tab_obj.active_window.cwd_of_child or '').strip()
+        wd = (tab_obj.active_window.get_cwd_of_root_child() or '').strip()
     home = os.path.expanduser('~')
     if wd == home:
         name = '~'

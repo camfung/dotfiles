@@ -1,0 +1,8 @@
+#compdef each
+# each [-n] COMMAND [ARGS...] — wrapper-style: complete the command word, then
+# defer to that command's own completion for everything after it.
+_arguments \
+  '-n[dry-run: print commands instead of executing]' \
+  '(-h --help)'{-h,--help}'[show help]' \
+  '(-): :_command_names -e' \
+  '*::arguments:_normal'

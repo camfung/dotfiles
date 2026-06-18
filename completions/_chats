@@ -1,0 +1,9 @@
+#compdef chats chatsearch.py
+# `chats` is an alias for scripts/chatsearch.py; zsh expands the alias and
+# dispatches completion to the script basename, so register both names.
+_arguments \
+  '--regex[treat query as a regex]' \
+  '--case-sensitive[case-sensitive match]' \
+  '--limit[max matches to display (default 200)]:limit:' \
+  '--print[print results instead of opening the picker]' \
+  '1:search query:'

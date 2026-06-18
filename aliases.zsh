@@ -35,6 +35,7 @@ fi
 alias q='echo "tsk tsk"'
 alias simple-web-server="simple-web-server --no-sandbox --disable-dev-shm-usage"
 alias olink='obsidian-symlink.sh'
+alias otag='/home/camer/dotfiles/scripts/obsidian-tag-connections.sh'
 alias startday="/home/camer/dotfiles/scripts/startDay.sh"
 alias chats="/home/camer/dotfiles/scripts/chatsearch.py"
 alias syncandroid="rsync -av --delete ~/Documents/obsidian-vault/ /media/camer/CAMFLASHER/CaracalObsVault"

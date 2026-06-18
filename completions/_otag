@@ -1,0 +1,12 @@
+#compdef otag obsidian-tag-connections.sh
+# `otag` is an alias for scripts/obsidian-tag-connections.sh; register both
+# names so completion fires whether or not the alias is expanded.
+_arguments \
+  '(-d --direction)'{-d,--direction}'[which connections to tag]:direction:(outgoing incoming both)' \
+  '(-D --depth)'{-D,--depth}'[walk the link graph n hops out (BFS)]:depth:' \
+  '(-s --self)'{-s,--self}'[also tag the target file itself]' \
+  '(-n --dry-run)'{-n,--dry-run}'[print changes without modifying anything]' \
+  '(-v --vault)'{-v,--vault}'[target a specific vault by name]:vault:' \
+  '(-h --help)'{-h,--help}'[show help]' \
+  '1:note (vault-relative .md):_path_files -W "${OBSIDIAN_VAULT:-.}" -g "*.md"' \
+  '2:tag:'

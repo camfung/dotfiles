@@ -1,5 +1,9 @@
 export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 
+# Custom completions for dotfiles functions — must join fpath before
+# oh-my-zsh runs compinit, or the `_name` files won't be registered.
+fpath=(~/dotfiles/completions $fpath)
+
 # Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""

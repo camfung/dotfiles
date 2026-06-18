@@ -1,0 +1,4 @@
+#compdef chat
+# Complete the first arg with existing subdirectories of ~/ClaudeChats.
+# A new name can still be typed — _path_files does not restrict to matches.
+_arguments '1:chat name:_path_files -/ -W "$HOME/ClaudeChats"'

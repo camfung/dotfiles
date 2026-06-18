@@ -1,0 +1,7 @@
+#compdef obslink
+_arguments \
+  '(-m --move)'{-m,--move}'[move the file instead of linking it]' \
+  '(-s --symbolic)'{-s,--symbolic}'[create a symbolic link instead of a hard link]' \
+  '(-h --help)'{-h,--help}'[show help]' \
+  '1:file or directory:_files' \
+  '2:link name:'

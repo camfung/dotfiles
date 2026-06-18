@@ -1,0 +1,5 @@
+#compdef stzcli
+# stzcli passes its args through to the structurizr CLI inside docker.
+_arguments \
+  '1:command:(push pull export validate inspect generate list version help)' \
+  '*::args:_files'

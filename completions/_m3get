@@ -1,0 +1,6 @@
+#compdef m3get
+# arg1 is a path on the remote host — not completable locally.
+# arg2 is a subdir under ~/m3 where the download lands.
+_arguments \
+  '1:remote path:' \
+  '2:local subdir:_path_files -/ -W "$HOME/m3"'

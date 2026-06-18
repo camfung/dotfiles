@@ -1,0 +1,4 @@
+#compdef cjq
+_arguments \
+  '(-s --save-to-cb)'{-s,--save-to-cb}'[also save result to clipboard]' \
+  '*:jq filter:'

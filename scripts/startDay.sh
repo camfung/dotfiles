@@ -51,6 +51,9 @@ fi
 
 if [ ! -d "$target_dir/$date" ]; then
     mv "$date" "$target_dir"
-else 
+else
     mv "$date/$date.md" "$target_dir/$date"
 fi
+
+# Publish current daily note path for shells to pick up (see functions/daily-note.zsh)
+printf '%s\n' "$target_dir/$date/$date.md" > "${OBSIDIAN_VAULT}/.current-daily-note"

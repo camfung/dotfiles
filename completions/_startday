@@ -1,0 +1,4 @@
+#compdef startday startDay.sh
+# `startday` is an alias for scripts/startDay.sh. The only arg is an optional
+# week number (defaults to current-week.txt) — no candidates to offer.
+_arguments '1:week number (default: current-week.txt):'

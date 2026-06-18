@@ -1,0 +1,7 @@
+#compdef forEach
+# The command string is eval'd and single-quoted by the user, so there is no
+# meaningful word to complete past the flags.
+_arguments \
+  '-n[dry-run: print commands instead of executing]' \
+  '(-h --help)'{-h,--help}'[show help]' \
+  '*:command string ($it = line):'

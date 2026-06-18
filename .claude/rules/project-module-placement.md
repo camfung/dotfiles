@@ -8,6 +8,7 @@ Where new functionality goes:
 
 - **One-liner conveniences** → add to `aliases.zsh`
 - **Multi-step operations or stateful functions** → own file in `functions/<name>.zsh` (auto-sourced by zshrc glob)
+- **Tab completion for a function/command** → autoload file `completions/_<name>` with a `#compdef <name>` header (dir is on `fpath` before compinit; no install.sh wiring needed)
 - **Standalone executables needing PATH** → `scripts/<name>` (add symlink in `install.sh`)
 - **Tool configs** → `config/<tool>/` or `config/<tool>.toml` (add symlink in `install.sh`)
 - **Machine-specific overrides** → `~/.machine-local.zsh` (not tracked; template in `machine-local.zsh.example`)
