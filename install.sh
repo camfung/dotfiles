@@ -104,6 +104,63 @@ if command -v dconf &>/dev/null && [ -f "$DOTFILES_DIR/config/gnome/vitals.dconf
   fi
 fi
 
+# Fixed 5 GNOME workspaces switched with Super+1..5 (virtual desktops).
+# Disables dynamic workspaces, pins the count at 5, frees Super+1..5 from the
+# dash app-switcher, and rebinds them to workspace switching. GNOME-only.
+if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q '^org.gnome.mutter$'; then
+  gsettings set org.gnome.mutter dynamic-workspaces false
+  gsettings set org.gnome.desktop.wm.preferences num-workspaces 5
+  for i in 1 2 3 4 5; do
+    gsettings set org.gnome.shell.keybindings "switch-to-application-$i" "[]"
+    gsettings set org.gnome.desktop.wm.keybindings "switch-to-workspace-$i" "['<Super>$i']"
+  done
+  # Ubuntu's Dash-to-Dock also binds Super+number to dock apps — disable so it
+  # doesn't shadow workspace switching.
+  if gsettings list-schemas 2>/dev/null | grep -q '^org.gnome.shell.extensions.dash-to-dock$'; then
+    gsettings set org.gnome.shell.extensions.dash-to-dock hot-keys false
+  fi
+  echo "Configured 5 GNOME workspaces (Super+1..5 to switch)"
+fi
+
+# LAN Port Index — service-discovery start page on :8888 (systemd --user service).
+mkdir -p ~/.local/bin ~/.config/systemd/user ~/.config/lanindex
+ln -sf "$DOTFILES_DIR/scripts/lanindex.py" ~/.local/bin/lanindex
+ln -sf "$DOTFILES_DIR/config/systemd/lanindex.service" ~/.config/systemd/user/lanindex.service
+echo "Linked lanindex -> ~/.local/bin/ and lanindex.service -> ~/.config/systemd/user/"
+if [ ! -f ~/.config/lanindex/registry.toml ]; then
+  cp "$DOTFILES_DIR/config/lanindex/registry.example.toml" ~/.config/lanindex/registry.toml
+  echo "Seeded ~/.config/lanindex/registry.toml"
+fi
+# Desktop launcher — opens the dashboard in an app-mode browser window.
+ln -sf "$DOTFILES_DIR/scripts/lanindex-open" ~/.local/bin/lanindex-open
+mkdir -p ~/.local/share/applications ~/.local/share/icons/hicolor/scalable/apps
+ln -sf "$DOTFILES_DIR/config/lanindex/lanindex.desktop" ~/.local/share/applications/lanindex.desktop
+ln -sf "$DOTFILES_DIR/config/lanindex/lanindex.svg" ~/.local/share/icons/hicolor/scalable/apps/lanindex.svg
+command -v update-desktop-database &>/dev/null && update-desktop-database ~/.local/share/applications 2>/dev/null || true
+echo "Installed LAN Port Index desktop app"
+
+if command -v systemctl &>/dev/null; then
+  systemctl --user daemon-reload
+  systemctl --user enable --now lanindex.service 2>/dev/null \
+    && echo "LAN Port Index running on :8888" \
+    || echo "Enable manually: systemctl --user enable --now lanindex.service"
+fi
+
+# Network HTML Host — OPTIONAL. Always-on host for self-contained HTML docs (:8989).
+# Opt in with:  INSTALL_HTML_HOST=1 ./install.sh
+if [ "${INSTALL_HTML_HOST:-0}" = "1" ]; then
+  HTML_HOST_SRC="${HTML_HOST_SRC:-$HOME/.local/share/network-html-host}"
+  if [ -d "$HTML_HOST_SRC/.git" ]; then
+    git -C "$HTML_HOST_SRC" pull --ff-only --quiet && echo "Updated network-html-host"
+  else
+    git clone --quiet https://github.com/camfung/network-html-host "$HTML_HOST_SRC" \
+      && echo "Cloned network-html-host -> $HTML_HOST_SRC"
+  fi
+  bash "$HTML_HOST_SRC/install.sh"
+else
+  echo "Skipped Network HTML Host (set INSTALL_HTML_HOST=1 to install)"
+fi
+
 echo ""
 echo "Installing core dependencies (fd, rg, claude)..."
 bash "$DOTFILES_DIR/dependencies/install-all.sh"
