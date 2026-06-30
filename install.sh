@@ -26,6 +26,10 @@ mkdir -p ~/.claude/hooks ~/.local/bin
 ln -sf "$DOTFILES_DIR/scripts/obsidian-symlink.sh" ~/.claude/hooks/obsidian-symlink.sh
 echo "Linked obsidian-symlink.sh -> ~/.claude/hooks/"
 
+# Claude Code statusline (referenced by ~/.claude/settings.json statusLine.command)
+ln -sf "$DOTFILES_DIR/scripts/statusline.sh" ~/.claude/statusline.sh
+echo "Linked statusline.sh -> ~/.claude/"
+
 # Obsidian vault is user data — only link if the vault is already present.
 if [ -d ~/Documents/obsidian-vault ]; then
   ln -sf "$DOTFILES_DIR/scripts/startDay.sh" ~/Documents/obsidian-vault/startDay.sh
