@@ -165,6 +165,33 @@ else
   echo "Skipped Network HTML Host (set INSTALL_HTML_HOST=1 to install)"
 fi
 
+# jira CLI — OPTIONAL. Read-only Jira reader (current sprint, JQL, saved filters,
+# issues as markdown). Private repo, so cloning needs gh auth.
+# Opt in with:  INSTALL_JIRA_CLI=1 ./install.sh
+# Use an existing checkout instead of cloning: JIRA_CLI_SRC=/path ./install.sh
+if [ "${INSTALL_JIRA_CLI:-0}" = "1" ]; then
+  JIRA_CLI_SRC="${JIRA_CLI_SRC:-$HOME/.local/share/jira-cli}"
+  if [ -d "$JIRA_CLI_SRC/.git" ]; then
+    git -C "$JIRA_CLI_SRC" pull --ff-only --quiet && echo "Updated jira-cli"
+  elif [ ! -d "$JIRA_CLI_SRC" ]; then
+    if command -v gh &>/dev/null; then
+      gh repo clone camfung/jira-cli "$JIRA_CLI_SRC" -- --quiet || true
+    else
+      git clone --quiet https://github.com/camfung/jira-cli "$JIRA_CLI_SRC" || true
+    fi
+    if [ -d "$JIRA_CLI_SRC/.git" ]; then
+      echo "Cloned jira-cli -> $JIRA_CLI_SRC"
+    fi
+  fi
+  if [ -f "$JIRA_CLI_SRC/install.sh" ]; then
+    bash "$JIRA_CLI_SRC/install.sh"
+  else
+    echo "jira-cli unavailable at $JIRA_CLI_SRC (private repo needs gh auth)" >&2
+  fi
+else
+  echo "Skipped jira CLI (set INSTALL_JIRA_CLI=1 to install)"
+fi
+
 echo ""
 echo "Installing core dependencies (fd, rg, claude)..."
 bash "$DOTFILES_DIR/dependencies/install-all.sh"
