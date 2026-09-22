@@ -1,0 +1,5 @@
+@-moz-document domain("ventek.atlassian.net"), domain("venvuedev.venteksys.com") {
+  :root, :root * {
+    font-family: 'Hurmit Nerd Font', 'Hurmit Nerd Font Mono', monospace !important;
+  }
+}

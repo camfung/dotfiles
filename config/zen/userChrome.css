@@ -1,0 +1,12 @@
+/* Default font for the whole browser chrome (tabs, toolbar, menus, sidebar, settings) */
+:root {
+  --font-family: 'Hurmit Nerd Font', 'Hurmit Nerd Font Mono', monospace !important;
+}
+:root, :root * {
+  font-family: 'Hurmit Nerd Font', 'Hurmit Nerd Font Mono', monospace !important;
+}
+
+/* Right-click context menu: background = active space's theme color */
+#contentAreaContextMenu {
+  --arrowpanel-background: var(--zen-colors-primary) !important;
+}

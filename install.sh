@@ -49,6 +49,49 @@ ln -sf "$DOTFILES_DIR/config/kitty/kitty.conf" ~/.config/kitty/kitty.conf
 ln -sf "$DOTFILES_DIR/config/kitty/tab_bar.py" ~/.config/kitty/tab_bar.py
 echo "Linked kitty config -> ~/.config/kitty/"
 
+# Zen browser autoconfig (Alt+9 = tab 9, Alt+Shift+0..9 = tabs 10-19).
+# Autoconfig is read from the install dir, not the profile. Override with ZEN_DIR=/path.
+# Install Zen first so a fresh machine has a dir to link into.
+bash "$DOTFILES_DIR/dependencies/install-zen.sh" || echo "Zen install failed — continuing"
+ZEN_DIR="${ZEN_DIR:-}"
+if [ -z "$ZEN_DIR" ] && command -v zen &>/dev/null; then
+  ZEN_DIR="$(dirname "$(readlink -f "$(command -v zen)")")"
+fi
+[ -z "$ZEN_DIR" ] && [ -x "$HOME/zen/zen" ] && ZEN_DIR="$HOME/zen"
+if [ -n "$ZEN_DIR" ] && [ -w "$ZEN_DIR" ] && [ -d "$ZEN_DIR/defaults/pref" ]; then
+  ln -sf "$DOTFILES_DIR/config/zen/config.js" "$ZEN_DIR/config.js"
+  ln -sf "$DOTFILES_DIR/config/zen/autoconfig.js" "$ZEN_DIR/defaults/pref/autoconfig.js"
+  echo "Linked Zen autoconfig -> $ZEN_DIR/ (restart Zen to apply)"
+elif [ -n "$ZEN_DIR" ]; then
+  echo "Skipped Zen autoconfig ($ZEN_DIR not writable — needs sudo, or Flatpak install)"
+else
+  echo "Skipped Zen autoconfig (Zen not found; set ZEN_DIR=/path/to/zen)"
+fi
+
+# Zen userChrome.css / userContent.css (Hurmit font, themed context menu, etc).
+# These live per-profile, not per-install, and the profile dir name is a random
+# hash. profiles.ini's Default=1 flag can point at a stale/unused profile
+# (seen in practice), so instead pick whichever profile dir has the most
+# recently modified prefs.js — that's the one actually being launched.
+# Override with ZEN_PROFILE_DIR.
+ZEN_PROFILE_DIR="${ZEN_PROFILE_DIR:-}"
+if [ -z "$ZEN_PROFILE_DIR" ] && [ -d "$HOME/.zen" ]; then
+  ZEN_PROFILE_DIR=$(
+    for d in "$HOME/.zen"/*/; do
+      [ -f "$d/prefs.js" ] || continue
+      printf '%s %s\n' "$(stat -c %Y "$d/prefs.js")" "$d"
+    done | sort -rn | head -1 | cut -d' ' -f2-
+  )
+fi
+if [ -n "$ZEN_PROFILE_DIR" ] && [ -d "$ZEN_PROFILE_DIR" ]; then
+  mkdir -p "$ZEN_PROFILE_DIR/chrome"
+  ln -sf "$DOTFILES_DIR/config/zen/userChrome.css" "$ZEN_PROFILE_DIR/chrome/userChrome.css"
+  ln -sf "$DOTFILES_DIR/config/zen/userContent.css" "$ZEN_PROFILE_DIR/chrome/userContent.css"
+  echo "Linked Zen userChrome/userContent.css -> $ZEN_PROFILE_DIR/chrome/ (restart Zen to apply)"
+else
+  echo "Skipped Zen userChrome/userContent.css (no profile found; set ZEN_PROFILE_DIR=/path/to/profile)"
+fi
+
 # Install kitty terminfo to ~/.terminfo so TERM=xterm-kitty resolves
 # (ncurses auto-discovers ~/.terminfo; no sudo needed)
 # Without this, Backspace and other keys can misbehave outside kitty's own session
