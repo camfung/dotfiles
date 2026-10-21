@@ -235,6 +235,33 @@ else
   echo "Skipped jira CLI (set INSTALL_JIRA_CLI=1 to install)"
 fi
 
+# Focus — OPTIONAL. Tiny borderless countdown timer, registered as a desktop app
+# (launcher + icon). Private repo, so cloning needs gh auth.
+# Opt in with:  INSTALL_FOCUS=1 ./install.sh
+# Use an existing checkout instead of cloning: FOCUS_SRC=/path ./install.sh
+if [ "${INSTALL_FOCUS:-0}" = "1" ]; then
+  FOCUS_SRC="${FOCUS_SRC:-$HOME/.local/share/focus}"
+  if [ -d "$FOCUS_SRC/.git" ]; then
+    git -C "$FOCUS_SRC" pull --ff-only --quiet && echo "Updated focus"
+  elif [ ! -d "$FOCUS_SRC" ]; then
+    if command -v gh &>/dev/null; then
+      gh repo clone camfung/focus "$FOCUS_SRC" -- --quiet || true
+    else
+      git clone --quiet https://github.com/camfung/focus "$FOCUS_SRC" || true
+    fi
+    if [ -d "$FOCUS_SRC/.git" ]; then
+      echo "Cloned focus -> $FOCUS_SRC"
+    fi
+  fi
+  if [ -f "$FOCUS_SRC/install.sh" ]; then
+    bash "$FOCUS_SRC/install.sh"
+  else
+    echo "focus unavailable at $FOCUS_SRC (private repo needs gh auth)" >&2
+  fi
+else
+  echo "Skipped Focus (set INSTALL_FOCUS=1 to install)"
+fi
+
 echo ""
 echo "Installing core dependencies (fd, rg, claude)..."
 bash "$DOTFILES_DIR/dependencies/install-all.sh"
